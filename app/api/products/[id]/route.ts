@@ -1,37 +1,27 @@
 import { prisma } from "@/db.server";
-import { NextRequest, NextResponse } from "next/server";
 
-// GET /api/products/[id]
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
+//Get Single Product
+export async function GET(_: Request, { params }: { params: { id: string } }) {
   const product = await prisma.product.findUnique({
-    where: { id: Number(id) },
+    where: { id: Number(params.id) },
   });
-
-  if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
-
-  return NextResponse.json(product);
+  return new Response(JSON.stringify(product), { status: 200 });
 }
 
-// PUT /api/products/[id]
-export async function PUT(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
+//Update a Single Product
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const { name, description, price } = await req.json();
-
-  const updated = await prisma.product.update({
-    where: { id: Number(id) },
+  const product = await prisma.product.update({
+    where: { id: Number(params.id) },
     data: { name, description, price: parseFloat(price) },
   });
-
-  return NextResponse.json(updated);
+  return new Response(JSON.stringify(product), { status: 200 });
 }
 
-// DELETE /api/products/[id]
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = context.params;
+//Delete a Single Product
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   await prisma.product.delete({
-    where: { id: Number(id) },
+    where: { id: Number(params.id) },
   });
-
-  return NextResponse.json({ success: true });
+  return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
