@@ -9,14 +9,25 @@ import { Edit, Trash2 } from "lucide-react";
 import { useProducts } from "@/utils/productApi";
 import { CustomTable } from "@/components/common/CommonTable";
 
-const Products = () => {
+// Define product type
+export type Product = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+};
+
+const Products: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
 
-  const { data: products } = useProducts();
+  // Fetch products
+  const productsResponse = useProducts();
+  const products: Product[] = productsResponse?.data || [];
 
+  // Handlers
   const handleEdit = (id: number) => {
     setSelectedProductId(id);
     setUpdateModalOpen(true);
@@ -29,6 +40,7 @@ const Products = () => {
 
   return (
     <div className="space-y-4 w-full">
+      {/* Create Button */}
       <div className="flex justify-end">
         <Button onClick={() => setCreateModalOpen(true)} className="bg-blue-600 rounded hover:bg-blue-900">
           Create Product
@@ -37,19 +49,23 @@ const Products = () => {
 
       {/* Modals */}
       <CreateProductModal open={createModalOpen} onClose={() => setCreateModalOpen(false)} />
-      {selectedProductId && <UpdateProductModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} productId={selectedProductId} />}
-      {selectedProductId && <DeleteProductModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} productId={selectedProductId} />}
+      {selectedProductId !== null && <UpdateProductModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} productId={selectedProductId} />}
+      {selectedProductId !== null && <DeleteProductModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} productId={selectedProductId} />}
 
-      {/* Table */}
-      <CustomTable
+      {/* Products Table */}
+      <CustomTable<Product>
         columns={[
           { header: "Name", accessor: "name" },
           { header: "Description", accessor: "description" },
-          { header: "Price", accessor: "price", render: (row: any) => `$${row.price.toFixed(2)}` },
+          {
+            header: "Price",
+            accessor: "price",
+            render: (row) => `$${row.price.toFixed(2)}`,
+          },
           {
             header: "Actions",
             accessor: "id",
-            render: (row: any) => (
+            render: (row) => (
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => handleEdit(row.id)}>
                   <Edit className="w-4 h-4" />
@@ -61,7 +77,7 @@ const Products = () => {
             ),
           },
         ]}
-        data={products || []}
+        data={products}
       />
     </div>
   );
