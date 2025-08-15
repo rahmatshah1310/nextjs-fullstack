@@ -1,15 +1,9 @@
 import { prisma } from "@/db.server";
 import { NextResponse } from "next/server";
-
-// Type for route parameters
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
+import type { NextRequest } from "next/server";
 
 // Get Single Product
-export async function GET(request: Request, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const product = await prisma.product.findUnique({
       where: { id: Number(params.id) },
@@ -26,7 +20,7 @@ export async function GET(request: Request, { params }: RouteParams) {
 }
 
 // Update a Single Product
-export async function PUT(request: Request, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { name, description, price } = await request.json();
     const product = await prisma.product.update({
@@ -40,7 +34,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 }
 
 // Delete a Single Product
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     await prisma.product.delete({
       where: { id: Number(params.id) },
