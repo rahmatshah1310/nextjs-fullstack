@@ -1,15 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icons } from "@/constants/icons";
 import { Button } from "@/components/ui/button";
 import { SignupFormValues, signupSchema } from "@/validation/authSchema";
 import { toast } from "react-toastify";
-import { useSignupMutation } from "@/utils/authApi"; // your mutation hook
+import { useSignupMutation } from "@/utils/authApi";
 import Input from "@/components/ui/Input";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function SignupRoute() {
   const router = useRouter();
@@ -31,24 +32,23 @@ export default function SignupRoute() {
     },
   });
 
-  const onSubmit = async (data: SignupFormValues) => {
-    signupMutation.mutate(
-      {
-        name: data.fullName,
-        email: data.email,
-        password: data.password,
-        company: data.company,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Account created successfully!");
-          router.push("/");
-        },
-        onError: (error) => {
-          toast.error(error?.message || "Something went wrong");
-        },
-      }
-    );
+  useEffect(() => {
+    if (signupMutation.status === "success") {
+      toast.success("Account created succesfully!");
+      router.push("/");
+    } else if (signupMutation.status === "error") {
+      const err = signupMutation.error;
+      toast.error(err.message);
+    }
+  }, [signupMutation.status, signupMutation.error, router]);
+
+  const onSubmit: SubmitHandler<SignupFormValues> = (data: SignupFormValues) => {
+    signupMutation.mutate({
+      name: data.fullName,
+      email: data.email,
+      password: data.password,
+      company: data.company,
+    });
   };
 
   return (
