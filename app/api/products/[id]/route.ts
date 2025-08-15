@@ -2,11 +2,17 @@ import { prisma } from "@/db.server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+type RouteHandlerParams = {
+  params: {
+    id: string;
+  };
+};
+
 // Get Single Product
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: RouteHandlerParams) {
   try {
     const product = await prisma.product.findUnique({
-      where: { id: Number(params.id) },
+      where: { id: Number(context.params.id) },
     });
 
     if (!product) {
@@ -20,11 +26,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // Update a Single Product
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: RouteHandlerParams) {
   try {
     const { name, description, price } = await request.json();
     const product = await prisma.product.update({
-      where: { id: Number(params.id) },
+      where: { id: Number(context.params.id) },
       data: { name, description, price: parseFloat(price) },
     });
     return NextResponse.json(product);
@@ -34,10 +40,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // Delete a Single Product
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: RouteHandlerParams) {
   try {
     await prisma.product.delete({
-      where: { id: Number(params.id) },
+      where: { id: Number(context.params.id) },
     });
     return NextResponse.json({ success: true });
   } catch {
