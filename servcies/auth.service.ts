@@ -19,11 +19,16 @@ export async function login({ email, password }: LoginCredentials) {
     });
 
     if (res?.error) {
-      throw new Error(res.error);
+      throw {
+        status: 401,
+        message: "Unauthorized",
+        detail: res.error,
+      };
     }
-    return { success: true };
+
+    return res;
   } catch (err) {
-    return { success: false, message: (err as Error).message };
+    throw err;
   }
 }
 
