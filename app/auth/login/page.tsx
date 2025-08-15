@@ -30,8 +30,10 @@ export default function LoginRoute() {
       toast.success("Login Successfully!");
       router.push("/");
     } else if (loginMutation.status === "error") {
-      const err = loginMutation.error;
-      if (err instanceof Error) {
+      const err = loginMutation.error as { status?: number; message?: string };
+      if (err?.status === 401) {
+        toast.error(err.message || "Unauthorized");
+      } else if (err instanceof Error) {
         toast.error(err.message);
       } else {
         toast.error("Something went wrong");
