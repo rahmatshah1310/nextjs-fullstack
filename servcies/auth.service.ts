@@ -11,25 +11,20 @@ interface SignupData extends LoginCredentials {
 }
 
 export async function login({ email, password }: LoginCredentials) {
-  try {
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+  const res = await signIn("credentials", {
+    email,
+    password,
+    redirect: false,
+  });
 
-    if (res?.error) {
-      throw {
-        status: 401,
-        message: "Unauthorized",
-        detail: res.error,
-      };
-    }
-
-    return res;
-  } catch (err) {
-    throw err;
+  if (res?.error) {
+    throw {
+      status: 401,
+      message: res.error || "Invalid email or password",
+    };
   }
+
+  return res;
 }
 
 export async function signup(data: SignupData) {
