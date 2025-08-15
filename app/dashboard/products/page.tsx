@@ -49,8 +49,8 @@ const Products: React.FC = () => {
 
       {/* Modals */}
       <CreateProductModal open={createModalOpen} onClose={() => setCreateModalOpen(false)} />
-      {selectedProductId !== null && <UpdateProductModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} productId={selectedProductId} />}
-      {selectedProductId !== null && <DeleteProductModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} productId={selectedProductId} />}
+      {selectedProductId && <UpdateProductModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} productId={selectedProductId} />}
+      {selectedProductId && <DeleteProductModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} productId={selectedProductId} />}
 
       {/* Products Table */}
       <CustomTable<Product>
