@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { useLogoutMutation } from "@/utils/authApi";
+import { toast } from "react-toastify";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -29,11 +30,12 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const handleLogout = async () => {
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
+        toast.success("Logout Succesfully");
         router.push("/auth/login");
       },
       onError: (error) => {
         console.error(error);
-        alert(error?.message || "Logout failed");
+        toast.error(error?.message || "Logout failed");
       },
     });
   };
