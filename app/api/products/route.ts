@@ -2,7 +2,11 @@ import { prisma } from "@/db.server";
 
 //Get All Products
 export async function GET() {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
   return new Response(JSON.stringify(products), { status: 200 });
 }
 
