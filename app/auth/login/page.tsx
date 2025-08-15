@@ -34,6 +34,7 @@ export default function LoginRoute() {
       if (err?.status === 401) {
         toast.error(err.message || "Unauthorized");
       } else if (err instanceof Error) {
+        console.log(err.message);
         toast.error(err.message);
       } else {
         toast.error("Something went wrong");
