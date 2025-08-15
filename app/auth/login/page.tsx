@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { loginSchema, type LoginFormValues } from "@/validation/authSchema";
 import Input from "@/components/ui/Input";
 import { Icons } from "@/constants/icons";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useLoginMutation } from "@/utils/authApi";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 export default function LoginRoute() {
   const router = useRouter();
@@ -24,19 +25,22 @@ export default function LoginRoute() {
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: LoginFormValues) => {
-    loginMutation.mutate(data, {
-      onSuccess: (result) => {
-        if (!result.success) {
-          toast.success("Login successfully!");
-          router.push("/");
-        }
-        router.push("/");
-      },
-      onError: (error) => {
-        toast.error(error?.message || "Something went wrong");
-      },
-    });
+  useEffect(() => {
+    if (loginMutation.status === "success") {
+      toast.success("Login Successfully!");
+      router.push("/");
+    } else if (loginMutation.status === "error") {
+      const err = loginMutation.error;
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  }, [loginMutation.status, router, loginMutation.error]);
+
+  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
+    loginMutation.mutate(data);
   };
 
   return (
