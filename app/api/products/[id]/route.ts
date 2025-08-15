@@ -1,52 +1,31 @@
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/db.server";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-
-type RouteHandlerParams = {
-  params: {
-    id: string;
-  };
-};
 
 // Get Single Product
-export async function GET(request: NextRequest, context: RouteHandlerParams) {
-  try {
-    const product = await prisma.product.findUnique({
-      where: { id: Number(context.params.id) },
-    });
-
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(product);
-  } catch {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const product = await prisma.product.findUnique({
+    where: { id: Number(id) },
+  });
+  return NextResponse.json(product, { status: 200 });
 }
 
 // Update a Single Product
-export async function PUT(request: NextRequest, context: RouteHandlerParams) {
-  try {
-    const { name, description, price } = await request.json();
-    const product = await prisma.product.update({
-      where: { id: Number(context.params.id) },
-      data: { name, description, price: parseFloat(price) },
-    });
-    return NextResponse.json(product);
-  } catch {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const { name, description, price } = await request.json();
+  const product = await prisma.product.update({
+    where: { id: Number(id) },
+    data: { name, description, price: parseFloat(price) },
+  });
+  return NextResponse.json(product, { status: 200 });
 }
 
 // Delete a Single Product
-export async function DELETE(request: NextRequest, context: RouteHandlerParams) {
-  try {
-    await prisma.product.delete({
-      where: { id: Number(context.params.id) },
-    });
-    return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  await prisma.product.delete({
+    where: { id: Number(id) },
+  });
+  return NextResponse.json({ success: true }, { status: 200 });
 }
