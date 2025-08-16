@@ -85,7 +85,7 @@ export default function CreateCustomerModal({ open, onClose, initialData }: Cust
         <div>
           <label className="block text-sm font-medium mb-1">Profile Image</label>
           <input type="file" accept="image/*" {...register("profileImage")} />
-          {formState.errors.profileImage && <p className="text-red-500 text-sm">{formState.errors.profileImage.message}</p>}
+          {formState.errors.profileImage?.message && <p className="text-red-500 text-sm">{String(formState.errors.profileImage.message)}</p>}
         </div>
 
         <Button type="submit" className="w-full" disabled={createCustomerMutation.isPending}>
