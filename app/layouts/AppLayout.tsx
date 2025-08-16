@@ -22,7 +22,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <Header setSidebarOpen={setSidebarOpen} />
         </div>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 sm:p-6 lg:p-8 overflow-y-auto">
           <div className="max-w-7xl mx-auto w-full">{children}</div>
         </main>
       </div>
