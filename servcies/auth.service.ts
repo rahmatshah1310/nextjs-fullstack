@@ -16,7 +16,7 @@ export async function login({ email, password }: LoginCredentials) {
     password,
     redirect: false,
   });
-
+  console.log(res?.error);
   if (res?.error) {
     throw {
       status: 401,
