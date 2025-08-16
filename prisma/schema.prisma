@@ -69,4 +69,63 @@ model Product {
   price       Float
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  invoiceItems InvoiceItem[]
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?   @unique
+  phone     String?
+  address   String?
+  profileImageUrl String?  
+  cloudinaryId    String?   
+  status    String    @default("active") // active/inactive
+  isDeleted Boolean   @default(false)
+
+  invoices  Invoice[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Invoice {
+  id             String        @id @default(cuid())
+  invoiceNumber  Int           @unique @default(autoincrement())
+  customerId     String
+  customer       Customer      @relation(fields: [customerId], references: [id])
+
+  items          InvoiceItem[]
+  totalAmount    Float
+  discount       Float?
+  tax            Float?
+  paymentStatus  PaymentStatus @default(PENDING)
+
+  isFinalized    Boolean       @default(false)
+  isDeleted      Boolean       @default(false)
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  productId   Int
+  quantity    Int
+  price       Float
+  discount    Float?
+  tax         Float?
+  total       Float
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
 }
