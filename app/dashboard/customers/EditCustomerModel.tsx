@@ -8,20 +8,26 @@ import { Modal } from "@/components/common/Model";
 import Input from "@/components/ui/Input";
 import { CustomerFormValues, customerSchema } from "@/validation/customreSchema";
 import { toast } from "react-toastify";
-import { useUpdateCustomer } from "@/utils/customerApi";
+import { useUpdateCustomer, useCustomerById } from "@/utils/customerApi";
+import { useEffect } from "react";
 
 interface EditCustomerModalProps {
   open: boolean;
   onClose: () => void;
   customerId: string;
-  initialData: CustomerFormValues;
 }
 
-export default function EditCustomerModal({ open, onClose, customerId, initialData }: EditCustomerModalProps) {
-  const { register, handleSubmit, formState } = useForm<CustomerFormValues>({
+export default function EditCustomerModal({ open, onClose, customerId }: EditCustomerModalProps) {
+  // ✅ Fetch customer by ID
+  const { data: customer } = useCustomerById(customerId);
+  const { register, handleSubmit, reset, formState } = useForm<CustomerFormValues>({
     resolver: zodResolver(customerSchema),
-    defaultValues: initialData,
   });
+
+  // When customer is fetched, reset form
+  useEffect(() => {
+    if (customer) reset(customer);
+  }, [customer, reset]);
 
   const updateCustomerMutation = useUpdateCustomer(customerId);
 
@@ -39,20 +45,26 @@ export default function EditCustomerModal({ open, onClose, customerId, initialDa
       if (file) formData.append("profileImage", file);
 
       await updateCustomerMutation.mutateAsync(formData);
+
       toast.success("Customer updated successfully!");
       onClose();
-    } catch (err) {
-      toast.error((err as Error).message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
+
+  //  Don’t render modal until customer data is ready
+  if (!customer) return null;
 
   return (
     <Modal title="Edit Customer" open={open} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input label="Name" {...register("name")} error={formState.errors.name?.message} />
-
         <Input label="Email" type="email" {...register("email")} error={formState.errors.email?.message} />
-
         <Input label="Phone" {...register("phone")} error={formState.errors.phone?.message} />
 
         <div>
@@ -74,7 +86,7 @@ export default function EditCustomerModal({ open, onClose, customerId, initialDa
         <div>
           <label className="block text-sm font-medium mb-1">Profile Image</label>
           <input type="file" accept="image/*" {...register("profileImage")} />
-          {formState.errors.profileImage && <p className="text-red-500 text-sm">{formState.errors.profileImage.message}</p>}
+          {formState.errors.profileImage?.message && <p className="text-red-500 text-sm">{String(formState.errors.profileImage.message)}</p>}
         </div>
 
         <Button type="submit" className="w-full" disabled={updateCustomerMutation.isPending}>
