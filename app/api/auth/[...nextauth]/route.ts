@@ -18,10 +18,18 @@ const handler = NextAuth({
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
-        if (!user || !user.password) return null;
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password are required");
+        }
+
+        if (!user || !user.password) {
+          throw new Error("Invalid email or password");
+        }
 
         const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) return null;
+        if (!isValid) {
+          throw new Error("Invalid email or password");
+        }
         return {
           id: user.id,
           email: user.email,
