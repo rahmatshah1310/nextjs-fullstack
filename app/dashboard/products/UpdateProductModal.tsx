@@ -21,17 +21,15 @@ export default function UpdateProductModal({ open, onClose, productId }: UpdateP
 
   const { register, handleSubmit, reset, formState } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: product ? { name: product.name, description: product.description || "", price: product.price.toString() } : undefined,
   });
 
   useEffect(() => {
-    if (product) {
+    if (product)
       reset({
         name: product.name,
         description: product.description || "",
         price: product.price.toString(),
       });
-    }
   }, [product, reset]);
 
   const onSubmit = async (data: ProductFormValues) => {
