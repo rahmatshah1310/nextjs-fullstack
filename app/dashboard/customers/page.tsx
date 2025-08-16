@@ -15,18 +15,18 @@ const Customers = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [customerId, setCustomerId] = useState<number | null>(null);
+  const [customerId, setCustomerId] = useState<string | null>(null);
 
   const customerResponse = useCustomers();
   const customers: Customer[] = customerResponse?.data || [];
 
   // Handlers
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     setCustomerId(id);
     setUpdateModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     setCustomerId(id);
     setDeleteModalOpen(true);
   };
@@ -70,8 +70,8 @@ const Customers = () => {
 
       {/* Modals */}
       <CreateCustomerModal open={createModalOpen} onClose={() => setCreateModalOpen(false)} />
-      {customerId && <EditCustomerModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} customerId={customerId} />}
-      {customerId && <DeleteCustomerModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} customerId={customerId} />}
+      {customerId && <EditCustomerModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} customerId={customerId.toString()} />}
+      {customerId && <DeleteCustomerModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} customerId={customerId.toString()} />}
 
       {/* Customers Table */}
       <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden mx-4 sm:mx-0">
