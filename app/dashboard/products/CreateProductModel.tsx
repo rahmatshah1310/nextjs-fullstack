@@ -39,7 +39,7 @@ export default function CreateProductModal({ open, onClose, initialData }: Produ
   };
 
   return (
-    <Modal title={initialData ? "Update Product" : "Create Product"} open={open} onClose={onClose}>
+    <Modal title="Create Product" open={open} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input label="Name" {...register("name")} error={formState.errors.name?.message} />
 
