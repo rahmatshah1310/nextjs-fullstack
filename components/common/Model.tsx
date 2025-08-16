@@ -14,7 +14,14 @@ interface ModalProps {
 export function Modal({ title, description, open, onClose, children }: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-[var(--main-bg)]">
+      <DialogContent
+        className="sm:max-w-lg 
+    bg-white/70 dark:bg-gray-900/70   
+    backdrop-blur-xl                
+    border border-white/20           
+    shadow-2xl                      
+    rounded-2xl"
+      >
         <DialogHeader>
           <DialogTitle className="text-center">{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
