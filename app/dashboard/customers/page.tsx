@@ -10,6 +10,7 @@ import { Customer } from "@prisma/client";
 import { Icons } from "@/constants/icons";
 import { CustomTable } from "@/components/common/CommonTable";
 import Image from "next/image";
+import Loader from "@/components/common/Loader";
 
 const Customers = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -18,8 +19,12 @@ const Customers = () => {
   const [customerId, setCustomerId] = useState<string | null>(null);
 
   const customerResponse = useCustomers();
+  const loading=customerResponse.isLoading;
   const customers: Customer[] = customerResponse?.data || [];
 
+  if(loading){
+    return <div><Loader/></div>
+  }
   // Handlers
   const handleEdit = (id: string) => {
     setCustomerId(id);
@@ -74,7 +79,7 @@ const Customers = () => {
       {customerId && <DeleteCustomerModal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} customerId={customerId.toString()} />}
 
       {/* Customers Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden mx-4 sm:mx-0">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl sm:rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden mx-4 sm:mx-0">
         <div className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 border-b border-gray-200 dark:border-gray-600">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Customer List</h3>
         </div>
