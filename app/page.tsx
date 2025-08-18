@@ -124,7 +124,7 @@ export default function Home() {
 
         {/* Quick Actions */}
         <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-4 sm:p-6 px-4 sm:px-0">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 sm:mb-6">Quick Actions</h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 sm:mb-6 pl-0 sm:pl-4">Quick Actions</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {quickActions.map((action) => (
               <Link
