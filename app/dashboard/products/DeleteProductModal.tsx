@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 interface DeleteProductModalProps {
   open: boolean;
   onClose: () => void;
-  productId: number;
+  productId: string;
 }
 
 export default function DeleteProductModal({ open, onClose, productId }: DeleteProductModalProps) {
