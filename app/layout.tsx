@@ -5,6 +5,8 @@ import { Providers } from "./providers/Providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ToastContainer } from "react-toastify"; // <-- correct import
 import "react-toastify/dist/ReactToastify.css"; // <-- required CSS
+import { Suspense } from "react";
+import Loader from "@/components/common/Loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +32,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Suspense fallback={<Loader />}>{children}</Suspense>
+          </Providers>
         </ThemeProvider>
         <ToastContainer
           position="top-right"
