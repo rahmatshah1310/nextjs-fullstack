@@ -1,8 +1,17 @@
 export interface Product {
-  id?: number;
+  id?: string;
   name: string;
   description?: string;
   price: number;
+  quantity?: number;
+  category?: string;
+  discount?: number;
+  isActive?: boolean;
+  sizes?: string[];
+  colors?: string[];
+  image?: File | null;
+  imageUrl?: string;
+  cloudinaryId?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -19,7 +28,7 @@ export async function getProducts() {
   }
 }
 
-export async function getProductById(id: number) {
+export async function getProductById(id: string) {
   try {
     const res = await fetch(`${API_URL}/${id}`);
     if (!res.ok) throw new Error(await res.text());
@@ -29,12 +38,11 @@ export async function getProductById(id: number) {
   }
 }
 
-export async function createProduct(product: Product) {
+export async function createProduct(formData: FormData): Promise<Product> {
   try {
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(product),
+      body: formData,
     });
     if (!res.ok) throw new Error(await res.text());
     return await res.json();
@@ -43,12 +51,11 @@ export async function createProduct(product: Product) {
   }
 }
 
-export async function updateProduct(id: number, product: Partial<Product>) {
+export async function updateProduct(id: string, formData: FormData): Promise<Product> {
   try {
     const res = await fetch(`${API_URL}/${id}`, {
-      method: "PUT", // or PATCH
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(product),
+      method: "PUT",
+      body: formData,
     });
     if (!res.ok) throw new Error(await res.text());
     return await res.json();
@@ -57,7 +64,7 @@ export async function updateProduct(id: number, product: Partial<Product>) {
   }
 }
 
-export async function deleteProduct(id: number) {
+export async function deleteProduct(id: string) {
   try {
     const res = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
