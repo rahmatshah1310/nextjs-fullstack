@@ -69,7 +69,7 @@ export default function CreateProductModal({ open, onClose, initialData }: Produ
   };
 
   return (
-    <Modal title="Create Product" open={open} onClose={onClose}>
+    <Modal title="Create Product" open={open} onClose={onClose} className="sm:max-w-xl">
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input label="Name" {...register("name")} error={formState.errors.name?.message} />
         <Input label="Price" type="number" step="0.01" {...register("price")} error={formState.errors.price?.message} />
