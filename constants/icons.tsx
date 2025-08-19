@@ -27,6 +27,7 @@ import {
   Plus,
   UserPlus,
   Inbox,
+  Image,
 } from "lucide-react";
 
 export const Icons = {
@@ -57,4 +58,5 @@ export const Icons = {
   plus: Plus,
   userPlus: UserPlus,
   inbox: Inbox,
+  image: Image,
 };
