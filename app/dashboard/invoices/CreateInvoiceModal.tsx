@@ -33,9 +33,7 @@ export default function CreateInvoiceModal({ open, onClose }: Props) {
   const [dueDate, setDueDate] = useState<string>(new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10));
   const [taxRate, setTaxRate] = useState<number>(10);
   const [notes, setNotes] = useState<string>("");
-  const [lineItems, setLineItems] = useState<LineItemDraft[]>([
-    { id: crypto.randomUUID(), productId: "", quantity: 1, unitPrice: 0, discount: 0 },
-  ]);
+  const [lineItems, setLineItems] = useState<LineItemDraft[]>([{ id: crypto.randomUUID(), productId: "", quantity: 1, unitPrice: 0, discount: 0 }]);
 
   const productMap = useMemo(() => {
     const map: Record<string, any> = {};
@@ -94,7 +92,7 @@ export default function CreateInvoiceModal({ open, onClose }: Props) {
   };
 
   return (
-    <Modal title="Create Invoice" open={open} onClose={onClose}>
+    <Modal title="Create Invoice" open={open} onClose={onClose} className="sm:max-w-2xl">
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -105,7 +103,9 @@ export default function CreateInvoiceModal({ open, onClose }: Props) {
               </SelectTrigger>
               <SelectContent>
                 {customers.map((c: any) => (
-                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -153,7 +153,9 @@ export default function CreateInvoiceModal({ open, onClose }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                           {products.map((p: any) => (
-                            <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                            <SelectItem key={p.id} value={p.id}>
+                              {p.name}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -207,21 +209,35 @@ export default function CreateInvoiceModal({ open, onClose }: Props) {
             </div>
           </div>
           <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
-            <div className="flex justify-between"><span>Subtotal</span><span>${totals.subtotal.toFixed(2)}</span></div>
-            <div className="flex justify-between"><span>Tax</span><span>${totals.tax.toFixed(2)}</span></div>
-            <div className="flex justify-between"><span>Discount</span><span>${totals.discount.toFixed(2)}</span></div>
-            <div className="flex justify-between text-lg font-semibold"><span>Total</span><span>${totals.total.toFixed(2)}</span></div>
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>${totals.subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Tax</span>
+              <span>${totals.tax.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Discount</span>
+              <span>${totals.discount.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-lg font-semibold">
+              <span>Total</span>
+              <span>${totals.total.toFixed(2)}</span>
+            </div>
           </div>
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => resetAndClose()}>Cancel</Button>
+          <Button variant="outline" onClick={() => resetAndClose()}>
+            Cancel
+          </Button>
           <Button onClick={() => save("DRAFT")}>Save as Draft</Button>
-          <Button onClick={() => save("PENDING")} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">Send Invoice</Button>
+          <Button onClick={() => save("PENDING")} className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+            Send Invoice
+          </Button>
         </div>
       </div>
     </Modal>
   );
 }
-
-
