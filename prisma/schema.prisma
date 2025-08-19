@@ -62,17 +62,6 @@ model VerificationToken {
 }
 
 
-model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String?
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  invoiceItems InvoiceItem[]
-}
-
 model Customer {
   id        String    @id @default(cuid())
   name      String
@@ -90,38 +79,56 @@ model Customer {
 }
 
 
+model Product {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  price        Decimal  @db.Decimal(10, 2)
+  quantity     Int      @default(0)
+  imageUrl     String?
+  cloudinaryId String?
+  category     String?
+  discount     Decimal? @db.Decimal(5, 2) // percentage
+  isActive     Boolean  @default(true)
+  sizes        String[]
+  colors       String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  invoiceItems InvoiceItem[]
+}
+
 model Invoice {
-  id             String        @id @default(cuid())
-  invoiceNumber  Int           @unique @default(autoincrement())
-  customerId     String
-  customer       Customer      @relation(fields: [customerId], references: [id])
-
-  items          InvoiceItem[]
-  totalAmount    Float
-  discount       Float?
-  tax            Float?
-  paymentStatus  PaymentStatus @default(PENDING)
-
-  isFinalized    Boolean       @default(false)
-  isDeleted      Boolean       @default(false)
-
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id            String        @id @default(cuid())
+  invoiceNumber Int           @unique @default(autoincrement())
+  customerId    String
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  items         InvoiceItem[]
+  totalAmount   Decimal       @db.Decimal(12, 2)
+  discount      Decimal?      @db.Decimal(5, 2)
+  tax           Decimal?      @db.Decimal(5, 2)
+  paymentStatus PaymentStatus @default(PENDING)
+  isFinalized   Boolean       @default(false)
+  isDeleted     Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model InvoiceItem {
-  id          String   @id @default(cuid())
-  invoiceId   String
-  productId   Int
-  quantity    Int
-  price       Float
-  discount    Float?
-  tax         Float?
-  total       Float
+  id         String   @id @default(cuid())
+  invoiceId  String
+  productId  String
+  productName String
+  quantity   Int
+  price      Decimal  @db.Decimal(10, 2)
+  discount   Decimal? @db.Decimal(5, 2)
+  tax        Decimal? @db.Decimal(5, 2)
+  total      Decimal  @db.Decimal(12, 2)
 
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
-  product     Product  @relation(fields: [productId], references: [id])
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
+
 
 enum PaymentStatus {
   PENDING
