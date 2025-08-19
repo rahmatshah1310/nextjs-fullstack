@@ -103,7 +103,7 @@ export default function UpdateInvoiceModal({ open, onClose, invoiceId }: Props) 
   };
 
   return (
-    <Modal title={`Edit Invoice ${invoice?.invoiceNumber ?? ""}`} open={open} onClose={onClose}>
+    <Modal title={`Edit Invoice ${invoice?.invoiceNumber ?? ""}`} open={open} onClose={onClose} className="sm:max-w-2xl">
       {!invoice ? (
         <div className="text-sm text-gray-500">Loading...</div>
       ) : (
@@ -117,7 +117,9 @@ export default function UpdateInvoiceModal({ open, onClose, invoiceId }: Props) 
                 </SelectTrigger>
                 <SelectContent>
                   {customers.map((c: any) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -165,7 +167,9 @@ export default function UpdateInvoiceModal({ open, onClose, invoiceId }: Props) 
                           </SelectTrigger>
                           <SelectContent>
                             {products.map((p: any) => (
-                              <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                              <SelectItem key={p.id} value={p.id}>
+                                {p.name}
+                              </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -219,15 +223,29 @@ export default function UpdateInvoiceModal({ open, onClose, invoiceId }: Props) 
               </div>
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
-              <div className="flex justify-between"><span>Subtotal</span><span>${totals.subtotal.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span>Tax</span><span>${totals.tax.toFixed(2)}</span></div>
-              <div className="flex justify-between"><span>Discount</span><span>${totals.discount.toFixed(2)}</span></div>
-              <div className="flex justify-between text-lg font-semibold"><span>Total</span><span>${totals.total.toFixed(2)}</span></div>
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>${totals.subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Tax</span>
+                <span>${totals.tax.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Discount</span>
+                <span>${totals.discount.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Total</span>
+                <span>${totals.total.toFixed(2)}</span>
+              </div>
             </div>
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => resetAndClose()}>Cancel</Button>
+            <Button variant="outline" onClick={() => resetAndClose()}>
+              Cancel
+            </Button>
             <Button onClick={save}>Save Changes</Button>
           </div>
         </div>
@@ -235,5 +253,3 @@ export default function UpdateInvoiceModal({ open, onClose, invoiceId }: Props) 
     </Modal>
   );
 }
-
-
