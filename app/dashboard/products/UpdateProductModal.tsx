@@ -85,7 +85,7 @@ export default function UpdateProductModal({ open, onClose, productId }: UpdateP
   if (!product) return null;
 
   return (
-    <Modal title="Update Product" open={open} onClose={onClose}>
+    <Modal title="Update Product" open={open} onClose={onClose} className="sm:max-w-xl">
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input label="Name" {...register("name")} error={formState.errors.name?.message} />
         <Input label="Price" type="number" step="0.01" {...register("price")} error={formState.errors.price?.message} />
